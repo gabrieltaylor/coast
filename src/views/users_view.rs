@@ -1,5 +1,4 @@
 use askama::Template;
-use tide::Body;
 
 #[derive(Template)]
 #[template(path = "users/index.html")]

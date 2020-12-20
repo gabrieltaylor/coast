@@ -1,11 +1,7 @@
-// This is an example of a function middleware that uses the
-// application state. Because it depends on a specific request state,
-// it would likely be closely tied to a specific application
+use crate::database;
 use std::future::Future;
 use std::pin::Pin;
-use tide::utils::{Before};
 use tide::{Next, Request, Response, Result, StatusCode};
-use crate::database;
 
 pub fn run<'a>(
     mut request: Request<database::UserDatabase>,

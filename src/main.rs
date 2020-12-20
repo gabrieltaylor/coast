@@ -1,9 +1,8 @@
-use std::future::Future;
 use tide::Result;
 
-mod middleware;
-mod database;
 mod controllers;
+mod database;
+mod middleware;
 mod routes;
 mod views;
 
