@@ -2,10 +2,24 @@ use config::{ConfigError, File};
 use config::Config as Configuration;
 use serde::Deserialize;
 use std::fmt;
+use tide::log::LevelFilter;
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct Log {
-    pub level: String,
+    #[serde(with = "LevelFilterDef")]
+    pub level: LevelFilter,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(remote = "LevelFilter")]
+#[serde(rename_all = "lowercase")]
+pub enum LevelFilterDef {
+    Off,
+    Error,
+    Warn,
+    Info,
+    Debug,
+    Trace,
 }
 
 #[derive(Debug, Deserialize, Clone)]

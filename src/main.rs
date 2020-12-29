@@ -1,4 +1,4 @@
-use tide::{Result, log};
+use tide::Result;
 #[macro_use]
 extern crate lazy_static;
 
@@ -13,7 +13,7 @@ lazy_static! {
 
 #[async_std::main]
 async fn main() -> Result<()> {
-    tide::log::with_level(log::LevelFilter::Debug);
+    tide::log::with_level(CONFIG.log.level);
     let mut app = tide::with_state(core::repo::UserDatabase::default());
 
     web::middleware::attach(&mut app);
