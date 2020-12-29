@@ -1,38 +1,23 @@
-use tide::{Result, log, Server};
+use tide::{Result, log};
 #[macro_use]
 extern crate lazy_static;
 
 mod config;
-mod controllers;
-mod repo;
-mod middleware;
-mod router;
-mod views;
+mod core;
+mod web;
 
 lazy_static! {
     static ref CONFIG: config::Config =
         config::Config::new().expect("config can be loaded");
 }
 
-// trait Attachable {
-//     fn attach(attachment: fn(&mut Self)) {
-//         attachment.attach(Self)
-//     }
-// }
-//
-// impl Attachable for Server<repo::UserDatabase> {
-//     pub fn attach(attachment: fn(&mut Self)) {
-//         attachment.attach(Self)
-//     }
-// }
-
 #[async_std::main]
 async fn main() -> Result<()> {
     tide::log::with_level(log::LevelFilter::Debug);
-    let mut app = tide::with_state(repo::UserDatabase::default());
+    let mut app = tide::with_state(core::repo::UserDatabase::default());
 
-    middleware::attach(&mut app);
-    router::attach(&mut app);
+    web::middleware::attach(&mut app);
+    web::router::attach(&mut app);
 
     println!(
         "Server started at {}:{} and ENV: {}",

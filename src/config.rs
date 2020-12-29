@@ -15,10 +15,31 @@ pub struct Server {
 }
 
 #[derive(Clone, Debug, Deserialize)]
+#[serde(rename_all = "lowercase")]
 pub enum ENV {
-    development,
-    test,
-    production,
+    Development,
+    Test,
+    Production,
+}
+
+impl fmt::Display for ENV {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            ENV::Development => write!(f, "development"),
+            ENV::Test => write!(f, "test"),
+            ENV::Production => write!(f, "production"),
+        }
+    }
+}
+
+impl From<&str> for ENV {
+    fn from(env: &str) -> Self {
+        match env {
+            "test" => ENV::Test,
+            "production" => ENV::Production,
+            _ => ENV::Development,
+        }
+    }
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -34,32 +55,12 @@ const CONFIG_FILE_PREFIX: &str = "./src/config/";
 impl Config {
     pub fn new() -> Result<Self, ConfigError> {
         let env = std::env::var("RUN_ENV").unwrap_or_else(|_| "development".into());
-        let mut s = Configuration::new();
-        s.set("env", env.clone())?;
+        let mut c = Configuration::new();
+        c.set("env", env.clone())?;
 
-        s.merge(File::with_name(CONFIG_FILE_PATH))?;
-        s.merge(File::with_name(&format!("{}{}", CONFIG_FILE_PREFIX, env)))?;
+        c.merge(File::with_name(CONFIG_FILE_PATH))?;
+        c.merge(File::with_name(&format!("{}{}", CONFIG_FILE_PREFIX, env)))?;
 
-        s.try_into()
-    }
-}
-
-impl fmt::Display for ENV {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            ENV::development => write!(f, "development"),
-            ENV::test => write!(f, "test"),
-            ENV::production => write!(f, "production"),
-        }
-    }
-}
-
-impl From<&str> for ENV {
-    fn from(env: &str) -> Self {
-        match env {
-            "test" => ENV::test,
-            "production" => ENV::production,
-            _ => ENV::development,
-        }
+        c.try_into()
     }
 }

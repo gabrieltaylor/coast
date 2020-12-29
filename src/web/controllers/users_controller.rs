@@ -1,5 +1,5 @@
-use crate::repo;
-use crate::views::users_view;
+use crate::core::repo;
+use crate::web::views::users_view;
 use askama::Template;
 use tide::{Request, Response};
 

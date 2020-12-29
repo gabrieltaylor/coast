@@ -1,4 +1,4 @@
-use crate::repo;
+use crate::core::repo;
 use tide::Server;
 
 mod current_user;
