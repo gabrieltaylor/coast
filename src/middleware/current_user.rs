@@ -1,11 +1,11 @@
-use crate::database;
+use crate::repo;
 use std::future::Future;
 use std::pin::Pin;
 use tide::{Next, Request, Response, Result, StatusCode};
 
-pub fn run<'a>(
-    mut request: Request<database::UserDatabase>,
-    next: Next<'a, database::UserDatabase>,
+pub fn call<'a>(
+    mut request: Request<repo::UserDatabase>,
+    next: Next<'a, repo::UserDatabase>,
 ) -> Pin<Box<dyn Future<Output = Result> + Send + 'a>> {
     Box::pin(async {
         if let Some(user) = request.state().find_user().await {

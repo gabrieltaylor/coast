@@ -1,10 +1,10 @@
-use crate::database;
+use crate::repo;
 use tide::Server;
 
 mod current_user;
 mod now;
 
-pub fn attach(app: &mut Server<database::UserDatabase>) {
-    app.with(now::run);
-    app.with(current_user::run);
+pub fn attach(app: &mut Server<repo::UserDatabase>) {
+    app.with(now::call);
+    app.with(current_user::call);
 }
