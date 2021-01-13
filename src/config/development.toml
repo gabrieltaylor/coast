@@ -1,2 +1,10 @@
 [log]
 level = "debug"
+
+[database]
+username = "postgres"
+password = "postgres"
+database = "coast"
+hostname = "localhost"
+pool_size = 10
+port = 5432

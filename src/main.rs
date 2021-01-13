@@ -1,29 +1,33 @@
+use sqlx::postgres::PgPool;
 use tide::Result;
-#[macro_use]
-extern crate lazy_static;
 
 mod config;
 mod core;
 mod web;
 
-lazy_static! {
-    static ref CONFIG: config::Config =
-        config::Config::new().expect("config can be loaded");
+use crate::config::CONFIG;
+
+#[derive(Clone)]
+pub struct State {
+    pool: PgPool,
 }
 
 #[async_std::main]
 async fn main() -> Result<()> {
     tide::log::with_level(CONFIG.log.level);
-    let mut app = tide::with_state(core::repo::UserDatabase::default());
+    let pool = core::repo::connect().await?;
+    let mut app = tide::with_state(State { pool: pool.clone() });
 
     web::middleware::attach(&mut app);
     web::router::attach(&mut app);
+
+    app.listen(format!("{}:{}", CONFIG.server.host, CONFIG.server.port))
+        .await?;
 
     println!(
         "Server started at {}:{} and ENV: {}",
         CONFIG.server.host, CONFIG.server.port, CONFIG.env
     );
 
-    app.listen(format!("{}:{}", CONFIG.server.host, CONFIG.server.port)).await?;
     Ok(())
 }

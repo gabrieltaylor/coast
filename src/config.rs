@@ -1,8 +1,33 @@
-use config::{ConfigError, File};
 use config::Config as Configuration;
+use config::{ConfigError, File};
 use serde::Deserialize;
 use std::fmt;
 use tide::log::LevelFilter;
+#[macro_use]
+use lazy_static::lazy_static;
+
+lazy_static! {
+    pub static ref CONFIG: Config = Config::new().expect("config can be loaded");
+}
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct Database {
+    pub username: String,
+    pub password: String,
+    pub database: String,
+    pub hostname: String,
+    pub port: String,
+    pub pool_size: u32,
+}
+
+impl Database {
+    pub fn uri(&self) -> String {
+        format!(
+            "postgres://{}:{}@{}:{}/{}",
+            self.username, self.password, self.hostname, self.port, self.database
+        )
+    }
+}
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct Log {
@@ -61,6 +86,7 @@ pub struct Config {
     pub server: Server,
     pub log: Log,
     pub env: ENV,
+    pub database: Database,
 }
 
 const CONFIG_FILE_PATH: &str = "./src/config/base.toml";

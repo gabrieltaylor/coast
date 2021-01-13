@@ -1,0 +1,15 @@
+{% extends "layout/app.html" %}
+
+{% block title %}Users - New {% endblock %}
+
+{% block inner_content %}
+<form action="/users" method="post" class="form-example">
+  <div class="form-example">
+    <label for="name">Name: </label>
+    <input type="text" name="name" id="name" required>
+  </div>
+  <div class="form-example">
+    <input type="submit" value="Submit">
+  </div>
+</form>
+{% endblock %}

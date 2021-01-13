@@ -1,14 +1,12 @@
-#[derive(Clone, Default, Debug)]
-pub struct UserDatabase;
-impl UserDatabase {
-    pub async fn find_user(&self) -> Option<User> {
-        Some(User {
-            name: "nori".into(),
-        })
-    }
-}
+use crate::config::CONFIG;
+use sqlx::postgres::PgPool;
+use sqlx::postgres::PgPoolOptions;
 
-#[derive(Debug)]
-pub struct User {
-    pub name: String,
+pub async fn connect() -> tide::Result<PgPool> {
+    let pool = PgPoolOptions::new()
+        .min_connections(CONFIG.database.pool_size)
+        .max_connections(CONFIG.database.pool_size)
+        .connect(&CONFIG.database.uri())
+        .await?;
+    Ok(pool)
 }

@@ -1,0 +1,19 @@
+{% extends "layout/app.html" %}
+
+{% block title %}Users - {{ user.name|e }} {% endblock %}
+
+{% block inner_content %}
+<h1>Show User</h1>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    {{ user.name|e }}
+  </li>
+
+</ul>
+
+<span><a href="/users/{{ user.id }}/edit">Edit</a></span>
+<span><a href="/users">Back</a></span>
+{% endblock %}

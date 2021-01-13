@@ -1,1 +1,29 @@
-Hello, {{ name }}!
+{% extends "layout/app.html" %}
+
+{% block title %}Users{% endblock %}
+
+{% block inner_content %}
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for user in users %}
+    <tr>
+      <td>{{ user.name|e }}</td>
+
+      <td>
+        <span><a href="/users/{{ user.id }}">Show</a></span>
+        <span><a href="/users/{{ user.id }}/edit">Edit</a></span>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<span><a href="/users/new">New User</a></span>
+{% endblock %}
